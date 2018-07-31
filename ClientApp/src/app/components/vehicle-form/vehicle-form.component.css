@@ -1,0 +1,8 @@
+  .custom-control {
+    display: inline-block !important;
+    margin-right: 10px; 
+  }
+
+  .custom-control-input{
+    margin-right: 5px; 
+  }
