@@ -1,8 +1,11 @@
+import * as Raven from 'raven-js';
+import { AppErrorHandler } from './app.error-handler';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ToastaModule } from 'ngx-toasta';
 
 import { VehicleService } from './services/vehicle.service';
 
@@ -12,6 +15,10 @@ import { HomeComponent } from './components/home/home.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
+
+Raven
+  .config('https://af021768863041a6a797d219d3b882ed@sentry.io/1255704')
+  .install();
 
 @NgModule({
   declarations: [
@@ -24,11 +31,13 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    ToastaModule.forRoot(),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'vehicles/new', component: VehicleFormComponent },
+      { path: 'vehicles/:id', component: VehicleFormComponent },
       { path: 'home', component: HomeComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
@@ -36,6 +45,7 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
     ])
   ],
   providers: [
+    { provide: ErrorHandler, useClass: AppErrorHandler },
     VehicleService
   ],
   bootstrap: [AppComponent]
