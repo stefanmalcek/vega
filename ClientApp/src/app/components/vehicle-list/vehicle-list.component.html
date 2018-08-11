@@ -4,30 +4,42 @@
   <a [routerLink]="['new']" class="btn btn-primary">Add Vehicles</a>
 </p>
 
-<!-- <div class="form-group">
-  <label for="make">Make</label>
-  <select id="make" class="form-control">
-    <option value=""></option>
-    <option *ngFor="let m of makes" value="{{m.id}}">{{m.name}}</option>
-  </select>
-</div> -->
+<div class="well">
+  <div class="form-group">
+    <label for="make">Make</label>
+    <select id="make" class="form-control" (change)="onFilterChange()" [(ngModel)]="query.makeId" name="makeId">
+      <option value=""></option>
+      <option *ngFor="let m of makes" value="{{m.id}}">{{m.name}}</option>
+    </select>
+  </div>
+  <button class="btn btn-default" (click)="resetFilter()">Reset</button>
+</div>
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Make</th>
-      <th scope="col">Model</th>
-      <th scope="col">Contact Name</th>
-      <th scope="col"></th>
+      <th *ngFor="let c of columns" scope="col">
+        <div *ngIf="c.isSortable; then sortable else default"></div>
+        <ng-template #sortable>
+          <div *ngIf="c.isSortable" (click)="sortBy(c.key)"> {{c.title}}
+            <i *ngIf="query.sortBy === c.key" class="fa" [class.fa-sort-asc]="query.isSortAscending" [class.fa-sort-desc]="!query.isSortAscending"></i>
+          </div>
+        </ng-template>
+        <ng-template #default>
+          <div *ngIf="!c.isSortable"> {{c.title}} </div>
+        </ng-template>
+      </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let v of vehicles">
+    <tr *ngFor="let v of queryResult.items">
       <th scope="row">{{v.id}}</th>
       <td>{{v.make.name}}</td>
       <td>{{v.model.name}}</td>
       <td>{{v.contact.name}}</td>
-      <td><a [routerLink]="[v.id]">View</a></td>
+      <td>
+        <a [routerLink]="[v.id]">View</a>
+      </td>
     </tr>
   </tbody>
 </table>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>

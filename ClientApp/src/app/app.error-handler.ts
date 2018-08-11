@@ -1,6 +1,6 @@
 import * as Raven from 'raven-js';
 import { ErrorHandler, Inject, NgZone, isDevMode } from "@angular/core";
-import { ToastaService } from "../../node_modules/ngx-toasta";
+import { ToastaService } from "ngx-toasta";
 
 export class AppErrorHandler implements ErrorHandler {
 
@@ -8,11 +8,6 @@ export class AppErrorHandler implements ErrorHandler {
         @Inject(ToastaService) private toastaService: ToastaService) { }
 
     handleError(error: any): void {
-        if (!isDevMode())
-            Raven.captureException(error.originalError);
-        else
-            throw error;
-
         this.ngZone.run(() => {
             this.toastaService.error({
                 title: 'Error',
@@ -22,5 +17,12 @@ export class AppErrorHandler implements ErrorHandler {
                 timeout: 5000
             });
         });
+
+        console.log(error);
+
+        if (!isDevMode())
+            Raven.captureException(error.originalError);
+        else
+            throw error;
     }
 }

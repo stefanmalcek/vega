@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { SaveVehicle } from '../../models/save-vehicle';
-import { ToastaService } from '../../../../node_modules/ngx-toasta';
+import { ToastaService } from 'ngx-toasta';
 
 @Component({
   selector: 'vehicle-form',
@@ -39,7 +39,8 @@ export class VehicleFormComponent implements OnInit {
     private toastaService: ToastaService) {
 
     route.params.subscribe(p => {
-      this.vehicle.id = +p['id'];
+      if (p['id'])
+        this.vehicle.id = +p['id'];
     })
   }
 
@@ -92,7 +93,15 @@ export class VehicleFormComponent implements OnInit {
         })
     else {
       this.vehicleService.create(this.vehicle)
-        .subscribe(x => console.log(x));
+        .subscribe(x => {
+          this.toastaService.success({
+            title: 'Success',
+            msg: 'The vehicle was sucessfully created.',
+            theme: 'bootstrap',
+            showClose: true,
+            timeout: 5000
+          });
+        });
     }
   }
 

@@ -1,3 +1,4 @@
+import { PaginationComponent } from './components/shared/pagination.component';
 import * as Raven from 'raven-js';
 import { AppErrorHandler } from './app.error-handler';
 import { BrowserModule } from '@angular/platform-browser';
@@ -29,7 +30,8 @@ Raven
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
-    VehicleListComponent
+    VehicleListComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

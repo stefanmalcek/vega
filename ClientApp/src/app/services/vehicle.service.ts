@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class VehicleService {
+  private readonly vehiclesEndpoint = 'api/vehicles';
 
   constructor(private http: HttpClient) { }
 
@@ -20,22 +21,32 @@ export class VehicleService {
   }
 
   create(vehicle) {
-    return this.http.post('api/vehicles', vehicle);
+    return this.http.post(this.vehiclesEndpoint, vehicle);
   }
 
   update(vehicle) {
-    return this.http.put('api/vehicles/' + vehicle.id, vehicle);
+    return this.http.put(this.vehiclesEndpoint + vehicle.id, vehicle);
   }
 
   getVehicle(id) {
-    return this.http.get('api/vehicles/' + id);
+    return this.http.get(this.vehiclesEndpoint + id);
   }
 
   delete(id) {
-    return this.http.delete('api/vehicles/' + id);
+    return this.http.delete(this.vehiclesEndpoint + id);
   }
 
-  getVehicles() {
-    return this.http.get<Vehicle[]>('api/vehicles');
+  getVehicles(filter) {
+    return this.http.get<Vehicle[]>(this.vehiclesEndpoint + '?' + this.toQueryString(filter));
+  }
+
+  toQueryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if (value != null && value != undefined)
+        parts.push(encodeURIComponent(property) + '=' + encodeURIComponent(value));
+    }
+    return parts.join('&');
   }
 }
