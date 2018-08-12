@@ -39,8 +39,7 @@ export class VehicleFormComponent implements OnInit {
     private toastaService: ToastaService) {
 
     route.params.subscribe(p => {
-      if (p['id'])
-        this.vehicle.id = +p['id'];
+      this.vehicle.id = +p['id'] || 0;
     })
   }
 
@@ -80,29 +79,17 @@ export class VehicleFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.vehicle.id)
-      this.vehicleService.update(this.vehicle)
-        .subscribe(x => {
-          this.toastaService.success({
-            title: 'Success',
-            msg: 'The vehicle was sucessfully updated.',
-            theme: 'bootstrap',
-            showClose: true,
-            timeout: 5000
-          });
-        })
-    else {
-      this.vehicleService.create(this.vehicle)
-        .subscribe(x => {
-          this.toastaService.success({
-            title: 'Success',
-            msg: 'The vehicle was sucessfully created.',
-            theme: 'bootstrap',
-            showClose: true,
-            timeout: 5000
-          });
-        });
-    }
+    var result$ = (this.vehicle.id) ? this.vehicleService.update(this.vehicle) : this.vehicleService.create(this.vehicle);
+    result$.subscribe(vehicle => {
+      this.toastaService.success({
+        title: 'Success',
+        msg: 'Data was sucessfully saved.',
+        theme: 'bootstrap',
+        showClose: true,
+        timeout: 5000
+      });
+      this.router.navigate(['/vehicles/', vehicle.id])
+    });
   }
 
   delete() {

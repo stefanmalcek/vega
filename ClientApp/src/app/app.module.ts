@@ -1,3 +1,5 @@
+
+import { ProgressService, BrowserXhrWithProgress } from './services/progress.service';
 import { PaginationComponent } from './components/shared/pagination.component';
 import * as Raven from 'raven-js';
 import { AppErrorHandler } from './app.error-handler';
@@ -17,6 +19,9 @@ import { CounterComponent } from './components/counter/counter.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list.component';
+import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle.component';
+import { PhotoService } from './services/photo.service';
+import { BrowserXhr } from '../../node_modules/@angular/common/http/src/xhr';
 
 Raven
   .config('https://af021768863041a6a797d219d3b882ed@sentry.io/1255704')
@@ -31,7 +36,8 @@ Raven
     FetchDataComponent,
     VehicleFormComponent,
     VehicleListComponent,
-    PaginationComponent
+    PaginationComponent,
+    ViewVehicleComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -41,7 +47,8 @@ Raven
     RouterModule.forRoot([
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
       { path: 'vehicles/new', component: VehicleFormComponent },
-      { path: 'vehicles/:id', component: VehicleFormComponent },
+      { path: 'vehicles/edit/:id', component: VehicleFormComponent },
+      { path: 'vehicles/:id', component: ViewVehicleComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'home', component: HomeComponent },
       { path: 'counter', component: CounterComponent },
@@ -51,7 +58,10 @@ Raven
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    VehicleService
+    //{ provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    VehicleService,
+    PhotoService,
+    //ProgressService
   ],
   bootstrap: [AppComponent]
 })

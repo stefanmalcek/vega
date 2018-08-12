@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class VehicleService {
-  private readonly vehiclesEndpoint = 'api/vehicles';
+  private readonly vehiclesEndpoint = 'api/vehicles/';
 
   constructor(private http: HttpClient) { }
 
@@ -21,11 +21,11 @@ export class VehicleService {
   }
 
   create(vehicle) {
-    return this.http.post(this.vehiclesEndpoint, vehicle);
+    return this.http.post<Vehicle>(this.vehiclesEndpoint, vehicle);
   }
 
   update(vehicle) {
-    return this.http.put(this.vehiclesEndpoint + vehicle.id, vehicle);
+    return this.http.put<Vehicle>(this.vehiclesEndpoint + vehicle.id, vehicle);
   }
 
   getVehicle(id) {

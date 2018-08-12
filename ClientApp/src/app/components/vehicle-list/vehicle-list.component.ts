@@ -1,6 +1,5 @@
 import { KeyValuePair } from './../../models/key-value-pair';
 import { VehicleService } from './../../services/vehicle.service';
-import { Vehicle } from './../../models/vehicle';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
