@@ -44,14 +44,10 @@ namespace vega.Persistence
         {
             var result = new QueryResult<Vehicle>();
             var query = context.Vehicles
-                     .Include(v => v.Features).ThenInclude(vf => vf.Feature)
                      .Include(v => v.Model).ThenInclude(m => m.Make)
                      .AsQueryable();
 
-            if (queryObj.MakeId.HasValue)
-                query = query.Where(v => v.Model.MakeId == queryObj.MakeId);
-            if (queryObj.ModelId.HasValue)
-                query = query.Where(v => v.Model.Id == queryObj.ModelId);
+            query = query.ApplyFiltering(queryObj);
 
             var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>
             {
@@ -59,11 +55,12 @@ namespace vega.Persistence
                 ["model"] = v => v.Model.Name,
                 ["contactName"] = v => v.Contact.Name
             };
-
             query = query.ApplyOrdering(queryObj, columnsMap);
+            
             result.TotalItems = await query.CountAsync();
 
             query = query.ApplyPaging(queryObj);
+            
             result.Items = await query.ToListAsync();
 
             return result;
