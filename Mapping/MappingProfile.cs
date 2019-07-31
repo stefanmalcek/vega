@@ -20,6 +20,7 @@ namespace vega.Mapping
             .ForMember(vr => vr.Features, opt => opt.MapFrom(v => v.Features.Select(vf => vf.FeatureId)));
             CreateMap<Vehicle, VehicleResource>()
              .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make))
+             .ForMember(vr => vr.Contact, opt => opt.MapFrom(v => v.Contact))
              .ForMember(vr => vr.Features, opt => opt.MapFrom(v => v.Features.Select(vf =>
              new KeyValuePairResource { Id = vf.FeatureId, Name = vf.Feature.Name })));
 
@@ -43,7 +44,7 @@ namespace vega.Mapping
                     v.Features.Add(feature);
 
             });
-            CreateMap<ContactResource, Contact>();
+            CreateMap<ContactResource, Contact>().ReverseMap();
         }
     }
 }

@@ -2,12 +2,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using vega.Core;
 using vega.Core.Models;
 using vega.Persistence;
@@ -26,7 +26,7 @@ namespace vega
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
+            services.Configure<PhotoSettings>(Configuration.GetSection(nameof(PhotoSettings)));
 
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddScoped<IVehicleRepository, VehicleRepository>();
@@ -35,7 +35,7 @@ namespace vega
             services.AddScoped<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddAuthentication(options =>
             {
@@ -48,7 +48,7 @@ namespace vega
                 options.Audience = "W6zoIqGgmgjLpWPFcCHcIGzeFh6Lq4JD";
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -70,7 +70,7 @@ namespace vega
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
