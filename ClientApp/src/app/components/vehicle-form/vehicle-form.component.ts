@@ -1,12 +1,12 @@
-import { Vehicle } from './../../models/vehicle';
-import { Make } from '../../models/make';
-import { KeyValuePair } from '../../models/key-value-pair';
-import { VehicleService } from '../../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { SaveVehicle } from '../../models/save-vehicle';
 import { ToastaService } from 'ngx-toasta';
+import { forkJoin } from 'rxjs';
+import { KeyValuePair } from '../../models/key-value-pair';
+import { Make } from '../../models/make';
+import { SaveVehicle } from '../../models/save-vehicle';
+import { VehicleService } from '../../services/vehicle.service';
+import { Vehicle } from './../../models/vehicle';
 
 @Component({
   selector: 'vehicle-form',
@@ -31,18 +31,19 @@ export class VehicleFormComponent implements OnInit {
   };
 
   constructor(
-    private route: ActivatedRoute,
+    route: ActivatedRoute,
     private router: Router,
     private vehicleService: VehicleService,
-    private toastaService: ToastaService) {
+    private toastaService: ToastaService
+  ) {
 
     route.params.subscribe(p => {
       this.vehicle.id = +p['id'] || 0;
-    })
+    });
   }
 
   ngOnInit() {
-    var sources: any[] = [
+    const sources: any[] = [
       this.vehicleService.getMakes(),
       this.vehicleService.getFeatures()
     ];
@@ -51,17 +52,18 @@ export class VehicleFormComponent implements OnInit {
       sources.push(this.vehicleService.getVehicle(this.vehicle.id));
     }
 
-    forkJoin(sources).subscribe(({ makes, features, vehicle }: any) => {
-      this.makes = makes;
-      this.features = features;
+    forkJoin(sources).subscribe((result: any[]) => {
+      this.makes = result[0];
+      this.features = result[1];
 
       if (this.vehicle.id) {
-        this.setVehicle(vehicle);
+        this.setVehicle(result[2]);
         this.populateModels();
       }
     }, err => {
-      if (err.status == 404)
+      if (err.status == 404) {
         this.router.navigate(['/home']);
+      }
     });
   }
 
@@ -69,17 +71,18 @@ export class VehicleFormComponent implements OnInit {
     this.populateModels();
     delete this.vehicle.modelId;
   }
-  onFeatureToggle(featureId, e) {
-    if (e.target.checked)
+
+  onFeatureToggle(featureId: number, e: any) {
+    if (e.target.checked) {
       this.vehicle.features.push(featureId);
-    else {
-      var index = this.vehicle.features.indexOf(featureId);
+    } else {
+      const index = this.vehicle.features.indexOf(featureId);
       this.vehicle.features.splice(index, 1);
     }
   }
 
   submit() {
-    var result$ = (this.vehicle.id)
+    const result$ = (this.vehicle.id)
       ? this.vehicleService.update(this.vehicle)
       : this.vehicleService.create(this.vehicle);
 
@@ -91,16 +94,14 @@ export class VehicleFormComponent implements OnInit {
         showClose: true,
         timeout: 5000
       });
-      this.router.navigate(['/vehicles/', vehicle.id])
+      this.router.navigate(['/vehicles/', vehicle.id]);
     });
   }
 
   delete() {
     if (confirm('Are you sure?')) {
       this.vehicleService.delete(this.vehicle.id)
-        .subscribe(x => {
-          this.router.navigate(['/home']);
-        })
+        .subscribe(_ => this.router.navigate(['/home']));
     }
   }
 
@@ -114,8 +115,7 @@ export class VehicleFormComponent implements OnInit {
   }
 
   private populateModels() {
-    var selectedMake = this.makes.find(m => m.id == this.vehicle.makeId);
+    const selectedMake = this.makes.find(m => m.id == this.vehicle.makeId);
     this.models = selectedMake ? selectedMake.models : [];
   }
-
 }

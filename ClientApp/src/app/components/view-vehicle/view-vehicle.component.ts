@@ -68,24 +68,18 @@ export class ViewVehicleComponent implements OnInit {
     //     null,
     //     () => { this.progress = null; });
 
-    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
-    var file = nativeElement.files[0];
+    const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+    const file = nativeElement.files[0];
     nativeElement.value = '';
     this.photoService.upload(this.vehicleId, file)
-      .subscribe(photo => {
-        this.photos.push(photo);
-      }, err => {
-
-        console.log(err);
-        this.toastaService.error({
+      .subscribe(photo => this.photos.push(photo),
+        err => this.toastaService.error({
           title: 'Error',
           msg: err.error,
           theme: 'bootstrap',
           showClose: true,
           timeout: 5000
-
-        });
-      });
+        })
+      );
   }
-
 }
