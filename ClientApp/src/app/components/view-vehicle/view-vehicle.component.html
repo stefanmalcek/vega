@@ -31,12 +31,11 @@
         <li>Contact Phone: {{ vehicle.contact.phone }}</li>
         <li>Contact Email: {{ vehicle.contact.email }}</li>
       </ul>
-      <br/>
-      <p>
+      <div class="row">
         <a class="btn btn-primary" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</a>
         <button class="btn btn-danger" (click)="delete()">Delete</button>
         <a class="btn btn-default" [routerLink]="['/vehicles']">View All Vehicles</a>
-      </p>
+      </div>
     </div>
     <!-- Photos tab -->
     <div role="tabpanel" class="tab-pane" id="photos">
@@ -44,10 +43,10 @@
       <input type="file" (change)="uploadPhoto()" #fileInput>
       <div class="progress" *ngIf="progress && progress.percentage < 100">
         <div class="progress-bar" [style.width]="progress.percentage + '%'">
-          <span class=" sr-only ">{{progress.percentage}}%</span>
+          <span class="sr-only ">{{progress.percentage}}%</span>
         </div>
       </div>
-      <img *ngFor="let photo of photos " src="/uploads/{{photo.fileName}} " class="img-thumbnail " alt="Car ">
+      <img *ngFor="let photo of photos" src="/uploads/{{photo.fileName}} " class="img-thumbnail " alt="Car ">
     </div>
   </div>
 </div>

@@ -1,8 +1,8 @@
-import { VehicleService } from './../../services/vehicle.service';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { ToastaService } from 'ngx-toasta';
 import { PhotoService } from '../../services/photo.service';
+import { VehicleService } from './../../services/vehicle.service';
 
 @Component({
   selector: 'view-vehicle',
@@ -11,19 +11,20 @@ import { PhotoService } from '../../services/photo.service';
 })
 export class ViewVehicleComponent implements OnInit {
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
+
   vehicle: any;
   vehicleId: number;
   photos: any[];
   progress: any;
 
   constructor(
+    route: ActivatedRoute,
     private zone: NgZone,
-    private route: ActivatedRoute,
     private router: Router,
     private toastaService: ToastaService,
     private vehicleService: VehicleService,
-    private photoService: PhotoService) {
-    // progressService: ProgressService) {
+    private photoService: PhotoService
+  ) {
 
     route.params.subscribe(p => {
       this.vehicleId = +p['id'];
@@ -50,29 +51,25 @@ export class ViewVehicleComponent implements OnInit {
   }
 
   delete() {
-    if (confirm("Are you sure?")) {
+    if (confirm('Are you sure?')) {
       this.vehicleService.delete(this.vehicle.id)
-        .subscribe(x => {
-          this.router.navigate(['/vehicles']);
-        });
+        .subscribe(_ => this.router.navigate(['/vehicles']));
     }
   }
 
   uploadPhoto() {
-    //TODO: fix progress service
-    // this.progressService.createUploadProgress
-    //   .subscribe(progress => {
-    //     console.log(progress)
-    //     this.zone.run(() => this.progress = progress);
-    //   },
-    //     null,
-    //     () => { this.progress = null; });
-
     const nativeElement: HTMLInputElement = this.fileInput.nativeElement;
     const file = nativeElement.files[0];
     nativeElement.value = '';
+
     this.photoService.upload(this.vehicleId, file)
-      .subscribe(photo => this.photos.push(photo),
+      .subscribe((progress) => {
+        this.zone.run(() => this.progress = progress);
+
+        if (progress.file) {
+          this.photos.push(progress.file);
+        }
+      },
         err => this.toastaService.error({
           title: 'Error',
           msg: err.error,
