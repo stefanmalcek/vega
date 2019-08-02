@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace vega.Core.Models
+namespace vega.Core.Entities
 {
     [Table("Photos")]
     public class Photo

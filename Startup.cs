@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using vega.Core;
 using vega.Core.Models;
+using vega.Core.Repositories;
 using vega.Persistence;
 
 namespace vega
@@ -31,6 +32,8 @@ namespace vega
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<IFeatureRepository, FeatureRepository>();
+            services.AddScoped<IMakeRepository, MakeRepository>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IPhotoStorage, FileSystemPhotoStorage>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

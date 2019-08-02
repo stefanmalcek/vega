@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
-using vega.Core.Models;
-using vega.Persistence;
+using vega.Core.Repositories;
 
 
 namespace vega.Controllers
@@ -14,20 +11,20 @@ namespace vega.Controllers
     [Route("api/[controller]")]
     public class FeaturesController : Controller
     {
-        private readonly VegaDbContext context;
-        private readonly IMapper mapper;
+        private readonly IFeatureRepository _repository;
+        private readonly IMapper _mapper;
 
-        public FeaturesController(VegaDbContext context, IMapper mapper)
+        public FeaturesController(IFeatureRepository repository, IMapper mapper)
         {
-            this.context = context;
-            this.mapper = mapper;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<KeyValuePairResource>> GetFeatures()
+        public async Task<ActionResult<IEnumerable<KeyValuePairResource>>> GetFeatures()
         {
-            var features = await context.Features.ToListAsync();
-            return mapper.Map<List<Feature>, List<KeyValuePairResource>>(features);
+            var features = await _repository.GetFeaturesAsync();
+            return Ok(_mapper.Map<IEnumerable<KeyValuePairResource>>(features));
         }
     }
 }

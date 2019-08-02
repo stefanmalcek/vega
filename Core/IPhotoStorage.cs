@@ -5,6 +5,6 @@ namespace vega.Core
 {
     public interface IPhotoStorage
     {
-        Task<string> StorePhoto(string uploadsFolderPath, IFormFile file);
+        Task<string> StorePhotoAsync(string uploadsFolderPath, IFormFile file);
     }
 }

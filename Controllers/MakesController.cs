@@ -2,30 +2,28 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
-using vega.Core.Models;
-using vega.Persistence;
+using vega.Core.Repositories;
 
 namespace vega.Controllers
 {
     [Route("api/[controller]")]
     public class MakesController : Controller
     {
-        private readonly VegaDbContext context;
-        private readonly IMapper mapper;
+        private readonly IMakeRepository _repository;
+        private readonly IMapper _mapper;
 
-        public MakesController(VegaDbContext context, IMapper mapper)
+        public MakesController(IMakeRepository repository, IMapper mapper)
         {
-            this.context = context;
-            this.mapper = mapper;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<MakeResource>> GetMakes()
+        public async Task<ActionResult<IEnumerable<MakeResource>>> GetMakes()
         {
-            var makes = await context.Makes.Include(m => m.Models).ToListAsync();
-            return mapper.Map<List<Make>, List<MakeResource>>(makes);
+            var makes = await _repository.GetMakesAsync();
+            return Ok(_mapper.Map<IEnumerable<MakeResource>>(makes));
         }
     }
 }

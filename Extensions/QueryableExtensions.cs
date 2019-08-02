@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using vega.Core.Entities;
 using vega.Core.Models;
 
 namespace vega.Extensions
 {
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         public static IQueryable<Vehicle> ApplyFiltering(this IQueryable<Vehicle> query, VehicleQuery queryObj)
         {
@@ -24,10 +25,9 @@ namespace vega.Extensions
             if (string.IsNullOrWhiteSpace(queryObj.SortBy) || !columnsMap.ContainsKey(queryObj.SortBy))
                 return query;
 
-            if (queryObj.IsSortAscending)
-                return query.OrderBy(columnsMap[queryObj.SortBy]);
-
-            return query.OrderByDescending(columnsMap[queryObj.SortBy]);
+            return queryObj.IsSortAscending
+                ? query.OrderBy(columnsMap[queryObj.SortBy])
+                : query.OrderByDescending(columnsMap[queryObj.SortBy]);
         }
 
         public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, IQueryObject queryObj)
@@ -38,7 +38,8 @@ namespace vega.Extensions
             if (queryObj.PageSize <= 0)
                 queryObj.PageSize = 10;
 
-            return query.Skip((queryObj.Page - 1) * queryObj.PageSize).Take(queryObj.PageSize);
+            return query.Skip((queryObj.Page - 1) * queryObj.PageSize)
+                .Take(queryObj.PageSize);
         }
     }
 }
