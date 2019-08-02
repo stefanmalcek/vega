@@ -1,6 +1,6 @@
-namespace vega.Controllers.Resources
+namespace vega.Dtos
 {
-    public class KeyValuePairResource
+    public class KeyValuePairDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

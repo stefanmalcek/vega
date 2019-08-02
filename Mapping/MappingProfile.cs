@@ -1,8 +1,8 @@
 using System.Linq;
 using AutoMapper;
-using vega.Controllers.Resources;
 using vega.Core.Entities;
 using vega.Core.Models;
+using vega.Dtos;
 
 namespace vega.Mapping
 {
@@ -11,24 +11,24 @@ namespace vega.Mapping
         public MappingProfile()
         {
             // Domain to API Resource
-            CreateMap<Photo, PhotoResource>();
-            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
-            CreateMap<Make, MakeResource>();
-            CreateMap<Make, KeyValuePairResource>();
-            CreateMap<Model, KeyValuePairResource>();
-            CreateMap<Feature, KeyValuePairResource>();
-            CreateMap<Vehicle, SaveVehicleResource>()
+            CreateMap<Photo, PhotoDto>();
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultDto<>));
+            CreateMap<Make, MakeDto>();
+            CreateMap<Make, KeyValuePairDto>();
+            CreateMap<Model, KeyValuePairDto>();
+            CreateMap<Feature, KeyValuePairDto>();
+            CreateMap<Vehicle, SaveVehicleDto>()
             .ForMember(vr => vr.Features, opt => opt.MapFrom(v => v.Features.Select(vf => vf.FeatureId)));
-            CreateMap<Vehicle, VehicleResource>()
+            CreateMap<Vehicle, VehicleDto>()
              .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make))
              .ForMember(vr => vr.Contact, opt => opt.MapFrom(v => v.Contact))
              .ForMember(vr => vr.Features, opt => opt.MapFrom(v => v.Features.Select(vf =>
-             new KeyValuePairResource { Id = vf.FeatureId, Name = vf.Feature.Name })));
+             new KeyValuePairDto { Id = vf.FeatureId, Name = vf.Feature.Name })));
 
             // API Resource to Domain
-            CreateMap<VehicleQueryResource, VehicleQuery>();
+            CreateMap<VehicleQueryDto, VehicleQuery>();
 
-            CreateMap<SaveVehicleResource, Vehicle>()
+            CreateMap<SaveVehicleDto, Vehicle>()
             .ForMember(v => v.Id, opt => opt.Ignore())
             .ForMember(v => v.Features, opt => opt.Ignore())
             .AfterMap((vr, v) =>
@@ -45,7 +45,7 @@ namespace vega.Mapping
                     v.Features.Add(feature);
 
             });
-            CreateMap<ContactResource, Contact>().ReverseMap();
+            CreateMap<ContactDto, Contact>().ReverseMap();
         }
     }
 }

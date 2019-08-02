@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace vega.Controllers.Resources
+namespace vega.Dtos
 {
-    public class ContactResource
+    public class ContactDto
     {
         [Required]
         [StringLength(255)]

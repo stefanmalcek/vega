@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using vega.Controllers.Resources;
 using vega.Core.Repositories;
+using vega.Dtos;
 
 
 namespace vega.Controllers
@@ -21,10 +21,10 @@ namespace vega.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KeyValuePairResource>>> GetFeatures()
+        public async Task<ActionResult<IEnumerable<KeyValuePairDto>>> GetFeatures()
         {
             var features = await _repository.GetFeaturesAsync();
-            return Ok(_mapper.Map<IEnumerable<KeyValuePairResource>>(features));
+            return Ok(_mapper.Map<IEnumerable<KeyValuePairDto>>(features));
         }
     }
 }

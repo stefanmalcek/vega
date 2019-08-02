@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using vega.Controllers.Resources;
 using vega.Core;
 using vega.Core.Models;
 using vega.Core.Repositories;
+using vega.Dtos;
 
 namespace vega.Controllers
 {
@@ -36,15 +36,15 @@ namespace vega.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhotoResource>>> GetPhotos(int vehicleId)
+        public async Task<ActionResult<IEnumerable<PhotoDto>>> GetPhotos(int vehicleId)
         {
             var photos = await _photoRepository.GetPhotosAsync(vehicleId);
 
-            return Ok(_mapper.Map<IEnumerable<PhotoResource>>(photos));
+            return Ok(_mapper.Map<IEnumerable<PhotoDto>>(photos));
         }
 
         [HttpPost]
-        public async Task<ActionResult<PhotoResource>> Upload(int vehicleId, IFormFile file)
+        public async Task<ActionResult<PhotoDto>> Upload(int vehicleId, IFormFile file)
         {
             var vehicle = await _vehicleRepository.GetVehicleAsync(vehicleId, includeRelated: false);
             if (vehicle == null)
@@ -58,7 +58,7 @@ namespace vega.Controllers
             var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
             var photo = await _photoService.UploadPhotoAsync(vehicle, file, uploadsFolderPath);
 
-            return Ok(_mapper.Map<PhotoResource>(photo));
+            return Ok(_mapper.Map<PhotoDto>(photo));
         }
     }
 }

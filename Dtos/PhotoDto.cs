@@ -1,6 +1,6 @@
-namespace vega.Controllers.Resources
+namespace vega.Dtos
 {
-    public class PhotoResource
+    public class PhotoDto
     {
         public int Id { get; set; }
         public string FileName { get; set; }

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using vega.Controllers.Resources;
 using vega.Core.Repositories;
+using vega.Dtos;
 
 namespace vega.Controllers
 {
@@ -20,10 +20,10 @@ namespace vega.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MakeResource>>> GetMakes()
+        public async Task<ActionResult<IEnumerable<MakeDto>>> GetMakes()
         {
             var makes = await _repository.GetMakesAsync();
-            return Ok(_mapper.Map<IEnumerable<MakeResource>>(makes));
+            return Ok(_mapper.Map<IEnumerable<MakeDto>>(makes));
         }
     }
 }

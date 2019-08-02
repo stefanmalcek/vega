@@ -2,18 +2,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace vega.Controllers.Resources
+namespace vega.Dtos
 {
-    public class SaveVehicleResource
+    public class SaveVehicleDto
     {
         public int Id { get; set; }
         public int ModelId { get; set; }
         public bool IsRegistered { get; set; }
         [Required]
-        public ContactResource Contact { get; set; }
+        public ContactDto Contact { get; set; }
         public ICollection<int> Features { get; set; }
 
-        public SaveVehicleResource()
+        public SaveVehicleDto()
         {
             Features = new Collection<int>();
         }

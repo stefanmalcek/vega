@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using vega.Controllers.Resources;
 using vega.Core;
 using vega.Core.Entities;
 using vega.Core.Models;
 using vega.Core.Repositories;
+using vega.Dtos;
 
 namespace vega.Controllers
 {
@@ -27,25 +27,25 @@ namespace vega.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<VehicleResource>> CreateVehicle([FromBody]SaveVehicleResource vehicleResource)
+        public async Task<ActionResult<VehicleDto>> CreateVehicle([FromBody]SaveVehicleDto vehicleDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vehicle = _mapper.Map<Vehicle>(vehicleResource);
+            var vehicle = _mapper.Map<Vehicle>(vehicleDto);
             vehicle.LastUpdate = DateTime.Now;
 
             _repository.AddVehicle(vehicle);
             await _unitOfWork.CompleteAsync();
 
             vehicle = await _repository.GetVehicleAsync(vehicle.Id);
-            var result = _mapper.Map<VehicleResource>(vehicle);
+            var result = _mapper.Map<VehicleDto>(vehicle);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<VehicleResource>> UpdateVehicle(int id, [FromBody]SaveVehicleResource vehicleResource)
+        public async Task<ActionResult<VehicleDto>> UpdateVehicle(int id, [FromBody]SaveVehicleDto vehicleDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -54,13 +54,13 @@ namespace vega.Controllers
             if (vehicle == null)
                 return NotFound();
 
-            _mapper.Map(vehicleResource, vehicle);
+            _mapper.Map(vehicleDto, vehicle);
             vehicle.LastUpdate = DateTime.Now;
 
             await _unitOfWork.CompleteAsync();
 
             vehicle = await _repository.GetVehicleAsync(id);
-            var result = _mapper.Map<VehicleResource>(vehicle);
+            var result = _mapper.Map<VehicleDto>(vehicle);
             return Ok(result);
         }
 
@@ -79,23 +79,23 @@ namespace vega.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<VehicleResource>> GetVehicle(int id)
+        public async Task<ActionResult<VehicleDto>> GetVehicle(int id)
         {
             var vehicle = await _repository.GetVehicleAsync(id);
             if (vehicle == null)
                 return NotFound();
 
-            var vehicleResource = _mapper.Map<VehicleResource>(vehicle);
+            var vehicleResource = _mapper.Map<VehicleDto>(vehicle);
             return Ok(vehicleResource);
         }
 
         [HttpGet]
-        public async Task<ActionResult<QueryResultResource<VehicleResource>>> GetVehicles(VehicleQueryResource queryResource)
+        public async Task<ActionResult<QueryResultDto<VehicleDto>>> GetVehicles(VehicleQueryDto queryDto)
         {
-            var queryObj = _mapper.Map<VehicleQueryResource, VehicleQuery>(queryResource);
+            var queryObj = _mapper.Map<VehicleQueryDto, VehicleQuery>(queryDto);
             var queryResult = await _repository.GetVehiclesAsync(queryObj);
 
-            return Ok(_mapper.Map<QueryResultResource<VehicleResource>>(queryResult));
+            return Ok(_mapper.Map<QueryResultDto<VehicleDto>>(queryResult));
         }
     }
 }

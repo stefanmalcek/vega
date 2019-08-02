@@ -1,6 +1,6 @@
-namespace vega.Controllers.Resources
+namespace vega.Dtos
 {
-    public class VehicleQueryResource
+    public class VehicleQueryDto
     {
         public int? MakeId { get; set; }
         public int? ModelId { get; set; }
