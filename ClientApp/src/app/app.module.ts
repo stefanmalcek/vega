@@ -1,7 +1,7 @@
 import { AuthGuard } from './services/auth-guard.service';
 import { AuthService } from './services/auth.service';
 
-import { ProgressService, BrowserXhrWithProgress } from './services/progress.service';
+// import { ProgressService, BrowserXhrWithProgress } from './services/progress.service';
 import { PaginationComponent } from './components/shared/pagination.component';
 import * as Raven from 'raven-js';
 import { AppErrorHandler } from './app.error-handler';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ToastaModule } from 'ngx-toasta';
-import { ChartModule} from 'angular2-chartjs';
+import { ChartModule } from 'angular2-chartjs';
 
 import { VehicleService } from './services/vehicle.service';
 
@@ -24,7 +24,7 @@ import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.com
 import { VehicleListComponent } from './components/vehicle-list/vehicle-list.component';
 import { ViewVehicleComponent } from './components/view-vehicle/view-vehicle.component';
 import { PhotoService } from './services/photo.service';
-import { BrowserXhr } from '../../node_modules/@angular/common/http/src/xhr';
+// import { BrowserXhr } from '../../node_modules/@angular/common/http/src/xhr';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminAuthGuard } from './services/admin-auth-guard.service';
 
@@ -47,7 +47,7 @@ Raven
     PaginationComponent,
     ViewVehicleComponent,
     AdminComponent
-    ],
+  ],
   imports: [
     ChartModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

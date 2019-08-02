@@ -1,5 +1,3 @@
-
-import * as _ from 'underscore';
 import { Vehicle } from './../../models/vehicle';
 import { Make } from '../../models/make';
 import { KeyValuePair } from '../../models/key-value-pair';
@@ -46,17 +44,19 @@ export class VehicleFormComponent implements OnInit {
   ngOnInit() {
     var sources: any[] = [
       this.vehicleService.getMakes(),
-      this.vehicleService.getFeatures(),];
+      this.vehicleService.getFeatures()
+    ];
 
-    if (this.vehicle.id)
+    if (this.vehicle.id) {
       sources.push(this.vehicleService.getVehicle(this.vehicle.id));
+    }
 
-    forkJoin(sources).subscribe(data => {
-      this.makes = data[0];
-      this.features = data[1];
+    forkJoin(sources).subscribe(({ makes, features, vehicle }: any) => {
+      this.makes = makes;
+      this.features = features;
 
       if (this.vehicle.id) {
-        this.setVehicle(data[2]);
+        this.setVehicle(vehicle);
         this.populateModels();
       }
     }, err => {
@@ -79,7 +79,10 @@ export class VehicleFormComponent implements OnInit {
   }
 
   submit() {
-    var result$ = (this.vehicle.id) ? this.vehicleService.update(this.vehicle) : this.vehicleService.create(this.vehicle);
+    var result$ = (this.vehicle.id)
+      ? this.vehicleService.update(this.vehicle)
+      : this.vehicleService.create(this.vehicle);
+
     result$.subscribe(vehicle => {
       this.toastaService.success({
         title: 'Success',
@@ -107,7 +110,7 @@ export class VehicleFormComponent implements OnInit {
     this.vehicle.modelId = v.model.id;
     this.vehicle.isRegistered = v.isRegistered;
     this.vehicle.contact = v.contact;
-    this.vehicle.features = _.pluck(v.features, 'id');
+    this.vehicle.features = v.features.map(f => f.id);
   }
 
   private populateModels() {

@@ -1,4 +1,3 @@
-import { ProgressService } from './../../services/progress.service';
 import { VehicleService } from './../../services/vehicle.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
@@ -11,7 +10,7 @@ import { PhotoService } from '../../services/photo.service';
   styleUrls: ['./view-vehicle.component.css']
 })
 export class ViewVehicleComponent implements OnInit {
-  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
   vehicle: any;
   vehicleId: number;
   photos: any[];
